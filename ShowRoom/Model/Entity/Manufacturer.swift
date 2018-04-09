@@ -13,7 +13,6 @@ final class Manufacturer {
     let name: String
     
     private (set) var cars: [Car] = []
-    var maxCarCount: Int? = nil
     
     init(id: Int, name: String) {
         self.id = id

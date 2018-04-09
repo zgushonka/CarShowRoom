@@ -12,6 +12,7 @@ import Alamofire
 class WebDataFetcher: DataFetcher {
     
     func fetchManufacurers(page: Int, pageSize: Int, completion: @escaping (PageInfo?, [Manufacturer]?, Error?)->() ) {
+        debugPrint("Fetch manufacurers - page \(page)")
         let url = Endpoints.Auto.manufacturer.url
         let parameters: Parameters = ManufacureURLParameters.make(page: page,
                                                                   pageSize: pageSize,
@@ -52,6 +53,7 @@ class WebDataFetcher: DataFetcher {
     
     
     func fetchCars(manufacturer: Int, page: Int, pageSize: Int, completion: @escaping (PageInfo?, [Car]?, Error?)->() ) {
+        debugPrint("Fetch cars for \(manufacturer) - page \(page)")
         let url = Endpoints.Auto.cars.url
         let parameters: Parameters = CarsURLParameters.make(manufacturer: manufacturer,
                                                             page: page,

@@ -22,7 +22,7 @@ class ManufacturerTests: XCTestCase {
     }
     
     func testCreation() {
-        let id = "42"
+        let id = 42
         let name = "Marvin Ltd."
         
         let manufacturer = Manufacturer(id: id, name: name)

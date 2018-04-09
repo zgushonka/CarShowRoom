@@ -11,9 +11,9 @@ import Foundation
 final class AppDataSource: AppDataSourceProtocol {
     
     private var manufacurers: [Manufacturer]        // Page : Manufacturers
-//    private var manufacurersPageInfo: PageInfo?
-//    private var carsPageInfo: [Int:PageInfo]?
-    private var maxManufacturerCount: Int?
+    
+    private var manufacurersPageInfo: PageInfo?
+    private var carsPageInfo: [Int:PageInfo] = [:]
     
     private var dataFetcher: DataFetcher
     private let pageSize: Int
@@ -29,11 +29,11 @@ final class AppDataSource: AppDataSourceProtocol {
     private func isMoreManufacurersAvaliable() -> Bool {
         let result = isMorePagesAvaliable(itemsFetched: manufacurers.count,
                                           itemsPerPage: pageSize,
-                                          totalCount: maxManufacturerCount)
+                                          totalPageCount: manufacurersPageInfo?.totalPageCount)
         return result
     }
     
-    var inManufacurersFetch = false
+    private var inManufacurersFetch = false
     func updateManufacurers(completion: @escaping ([Manufacturer], _ isLastUpdate: Bool)->() ) {
         let isAllDataFetched = !isMoreManufacurersAvaliable()
         if isAllDataFetched {
@@ -60,7 +60,7 @@ final class AppDataSource: AppDataSourceProtocol {
                     return
             }
             
-            self.maxManufacturerCount = pageInfo.pageSize * pageInfo.totalPageCount
+            self.manufacurersPageInfo = pageInfo
             self.manufacurers.append(contentsOf: manufacurers)
             
             let isAllDataFetched = !self.isMoreManufacurersAvaliable()
@@ -71,13 +71,14 @@ final class AppDataSource: AppDataSourceProtocol {
     
     // Update Cars
     private func isMoreCarsAvaliable(for manufacturer: Manufacturer) -> Bool {
+        let thisManufacturerCarsPageInfo = carsPageInfo[manufacturer.id]
         let result = isMorePagesAvaliable(itemsFetched: manufacturer.cars.count,
                                           itemsPerPage: pageSize,
-                                          totalCount: manufacturer.maxCarCount)
+                                          totalPageCount: thisManufacturerCarsPageInfo?.totalPageCount)
         return result
     }
     
-    var inCarsFetch = false
+    private var inCarsFetch = false
     func updateCars(manufacurer: Manufacturer, completion: @escaping (Manufacturer, _ isLastUpdate: Bool)->() ) {
         let isAllDataFetched = !isMoreCarsAvaliable(for: manufacurer)
         if isAllDataFetched {
@@ -104,8 +105,8 @@ final class AppDataSource: AppDataSourceProtocol {
                     return
             }
             
+            self.carsPageInfo[manufacurer.id] = pageInfo
             manufacurer.addCars(cars)
-            manufacurer.maxCarCount = pageInfo.pageSize * pageInfo.totalPageCount
             
             let isAllDataFetched = !self.isMoreCarsAvaliable(for: manufacurer)
             completion(manufacurer, isAllDataFetched)
@@ -117,10 +118,10 @@ final class AppDataSource: AppDataSourceProtocol {
 
 extension AppDataSource {
     // calc if we can fetch more data based on itemsFetched count and estimated items count
-    private func isMorePagesAvaliable(itemsFetched: Int, itemsPerPage: Int, totalCount: Int?) -> Bool {
-        guard let totalCount = totalCount else { return true } // assume we need to fetch the very first page
+    private func isMorePagesAvaliable(itemsFetched: Int, itemsPerPage: Int, totalPageCount: Int?) -> Bool {
+        guard let totalPageCount = totalPageCount else { return true } // assume we need to fetch the very first page
         let pagesFetched = fetchedPages(itemsFetched, itemsPerPage)
-        let result = pagesFetched < (totalCount / itemsPerPage)
+        let result = pagesFetched < totalPageCount
         return result
     }
     
