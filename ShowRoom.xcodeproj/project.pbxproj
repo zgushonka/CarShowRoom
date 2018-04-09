@@ -142,6 +142,18 @@
 			path = Cars;
 			sourceTree = "<group>";
 		};
+		E35200A3207BBA57004F0942 /* UseCases */ = {
+			isa = PBXGroup;
+			children = (
+				E3324CB1207AAD93008B85CF /* Manufacturers */,
+				E3324CBA207AD299008B85CF /* Cars */,
+				E3F49756207A7AB800B8CE05 /* AppDataSource.swift */,
+				E3F4974D207A6EF000B8CE05 /* Protocols.swift */,
+				E3F49754207A77EF00B8CE05 /* Constants.swift */,
+			);
+			path = UseCases;
+			sourceTree = "<group>";
+		};
 		E3BF893E20790AAA00363003 = {
 			isa = PBXGroup;
 			children = (
@@ -167,10 +179,10 @@
 			children = (
 				E3BF894A20790AAA00363003 /* AppDelegate.swift */,
 				E3BF894E20790AAA00363003 /* Main.storyboard */,
-				E3F05E0120796168008DFA7E /* Networking */,
 				E3C5FD83207954D50020BF0B /* Model */,
+				E35200A3207BBA57004F0942 /* UseCases */,
+				E3F05E0120796168008DFA7E /* Networking */,
 				E3F49751207A748D00B8CE05 /* View */,
-				E3F4974D207A6EF000B8CE05 /* Protocols.swift */,
 				E3BF895120790AAC00363003 /* Assets.xcassets */,
 				E3BF895320790AAC00363003 /* LaunchScreen.storyboard */,
 				E3BF895620790AAC00363003 /* Info.plist */,
@@ -192,7 +204,6 @@
 		E3C5FD83207954D50020BF0B /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				E3F49756207A7AB800B8CE05 /* AppDataSource.swift */,
 				E3F4975A207AA45A00B8CE05 /* Entity */,
 			);
 			path = Model;
@@ -216,9 +227,6 @@
 				E3F4975B207AA8D900B8CE05 /* RootNavigationController.swift */,
 				E3F4974F207A71D900B8CE05 /* ItemsViewController.swift */,
 				E3324CB2207AADBA008B85CF /* ItemTableViewCell.swift */,
-				E3324CB1207AAD93008B85CF /* Manufacturers */,
-				E3324CBA207AD299008B85CF /* Cars */,
-				E3F49754207A77EF00B8CE05 /* Constants.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
