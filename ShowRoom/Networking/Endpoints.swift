@@ -15,16 +15,16 @@ struct Endpoints {
         case manufacturer = "/manufacturer"
         case cars = "/main-types"
         
-        private var base: String {
-            return "your url"
-        }
-        
         var url: String {
             return base + self.rawValue
         }
         
-        static var key: String {
-            return "your key"
-        }
+//        private var base: String {
+//            return "your url"
+//        }
+        
+//        static var key: String {
+//            return "my key"
+//        }
     }
 }
