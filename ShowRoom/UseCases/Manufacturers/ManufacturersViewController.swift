@@ -23,7 +23,7 @@ class ManufacturersViewController: ItemsViewController {
                 let manufacturer = viewModel.item(forIndex: selectedItemIndex) as? Manufacturer {
                 let dataFetcher = WebDataFetcher()
                 let dataSource = AppDataSource(dataFetcher: dataFetcher, pageSize: PageInfo.defaultPageSize)
-                let viewModel = CarsViewModel(manufacturer: manufacturer, dataProvider: dataSource)
+                let viewModel = CarsViewModel(manufacturer: manufacturer, dataSource: dataSource)
                 vc.viewModel = viewModel
             }
         }

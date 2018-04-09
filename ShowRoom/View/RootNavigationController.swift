@@ -17,7 +17,7 @@ class RootNavigationController: UINavigationController {
             // assemble first view controller
             let dataFetcher = WebDataFetcher()
             let dataSource = AppDataSource(dataFetcher: dataFetcher, pageSize: PageInfo.defaultPageSize)
-            let viewModel = ManufacturersViewModel(dataProvider: dataSource)
+            let viewModel = ManufacturersViewModel(dataSource: dataSource)
             vc.viewModel = viewModel
         }
     }
