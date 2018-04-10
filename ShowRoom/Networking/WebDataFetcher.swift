@@ -17,15 +17,11 @@ final class WebDataFetcher: DataFetcher {
 //    add Alamofire
     private var requests: [DataRequest] = []
     private func fetchData(_ request: DataRequest, completion: @escaping (FetchResult?, Error?)->() ) {
-        UIApplication.shared.isNetworkActivityIndicatorVisible = true
-
-        guard !requests.contains(request) else {
-            return // skip request
-        }
-        requests.append(request)
+        guard addNewRequest(request) == true else { return } // skip request if exists
         
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
         request.responseJSON { [weak self] response in
-            _ = self?.deleteRequest(request: request)
+            _ = self?.deleteRequest(request)
             UIApplication.shared.isNetworkActivityIndicatorVisible = false
             
             if let error = response.error {
@@ -43,13 +39,18 @@ final class WebDataFetcher: DataFetcher {
         }
     }
     
-    private func cancelFetch(request: DataRequest) {
-        if let request = deleteRequest(request: request) {
-            request.cancel()
-        }
+    /// returns True if this is new request. Returns False if this request already exists.
+    private func addNewRequest(_ request: DataRequest) -> Bool {
+        guard !requests.contains(request) else { return false }
+        requests.append(request)
+        return true
     }
     
-    private func deleteRequest(request: DataRequest) -> DataRequest? {
+    private func cancelRequest(_ request: DataRequest) {
+        deleteRequest(request)?.cancel()
+    }
+    
+    private func deleteRequest(_ request: DataRequest) -> DataRequest? {
         if let requestIndex = requests.index(of: request) {
             return requests.remove(at: requestIndex)
         }
@@ -113,7 +114,7 @@ extension WebDataFetcher {
     func cancelManufacturersFetch(onIndex index: Int, pageSize: Int) {
         guard let page = page(forIndex: index, pageSize: pageSize) else { return }
         let request = makeRequestForFetchManufacturers(page: page, pageSize: pageSize)
-        cancelFetch(request: request)
+        cancelRequest(request)
     }
 }
 
@@ -164,7 +165,7 @@ extension WebDataFetcher {
     func cancelCarsFetch(manufacturerId: Int, onIndex index: Int, pageSize: Int) {
         guard let page = page(forIndex: index, pageSize: pageSize) else { return }
         let request = makeRequestForFetchCars(manufacturerId: manufacturerId,page: page, pageSize: pageSize)
-        cancelFetch(request: request)
+        cancelRequest(request)
     }
 }
 
