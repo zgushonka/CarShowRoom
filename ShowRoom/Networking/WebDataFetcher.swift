@@ -22,6 +22,7 @@ final class WebDataFetcher: DataFetcher {
         guard !requests.contains(request) else {
             return // skip request
         }
+        requests.append(request)
         
         request.responseJSON { [weak self] response in
             if let requestIndex = self?.requests.index(of: request) {
