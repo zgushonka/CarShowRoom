@@ -45,7 +45,7 @@ final class ManufacturersViewModel: ItemsViewModelProtocol {
     }
     
     private func askForNextItems() {
-        dataSource.updateManufacurers() { [weak self] manufacturers, isLastUpdate in
+        dataSource.updateManufacturers() { [weak self] manufacturers, isLastUpdate in
             self?.manufacturers = manufacturers
             self?.onDataUpdate?(isLastUpdate)
         }

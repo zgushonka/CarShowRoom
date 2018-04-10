@@ -10,9 +10,9 @@ import Foundation
 
 final class AppDataSource: AppDataSourceProtocol {
     
-    private var manufacurers: [Manufacturer]        // Page : Manufacturers
+    private var manufacturers: [Manufacturer]        // Page : Manufacturers
     
-    private var manufacurersPageInfo: PageInfo?
+    private var manufacturersPageInfo: PageInfo?
     private var carsPageInfo: [Int:PageInfo] = [:]
     
     private var dataFetcher: DataFetcher
@@ -21,48 +21,47 @@ final class AppDataSource: AppDataSourceProtocol {
     init(dataFetcher: DataFetcher, pageSize: Int) {
         self.dataFetcher = dataFetcher
         self.pageSize = pageSize
-        manufacurers = []
+        manufacturers = []
     }
     
     // AppDataSourceProtocol methods
     // update Manufacturers
-    private func isMoreManufacurersAvaliable() -> Bool {
-        let result = isMorePagesAvaliable(itemsFetched: manufacurers.count,
+    private func isMoreManufacturersAvaliable() -> Bool {
+        let result = isMorePagesAvaliable(itemsFetched: manufacturers.count,
                                           itemsPerPage: pageSize,
-                                          totalPageCount: manufacurersPageInfo?.totalPageCount)
+                                          totalPageCount: manufacturersPageInfo?.totalPageCount)
         return result
     }
     
-    // TODO get rid of fetch locks
-    func updateManufacurers(completion: @escaping ([Manufacturer], _ isLastUpdate: Bool)->() ) {
-        let isAllDataFetched = !isMoreManufacurersAvaliable()
+    func updateManufacturers(completion: @escaping ([Manufacturer], _ isLastUpdate: Bool)->() ) {
+        let isAllDataFetched = !isMoreManufacturersAvaliable()
         if isAllDataFetched {
-            completion(manufacurers, true)
+            completion(manufacturers, true)
             return
         }
         
         // fetch next page
-        let pagesFetched = fetchedPages(manufacurers.count, pageSize)
+        let pagesFetched = fetchedPages(manufacturers.count, pageSize)
         let pageToFetch = pagesFetched
-        dataFetcher.fetchManufacurers(page: pageToFetch, pageSize: pageSize) { [weak self] (pageInfo, manufacurers, error) in
+        dataFetcher.fetchManufacturers(page: pageToFetch, pageSize: pageSize) { [manufacturers, weak self] (pageInfo, newManufacturers, error) in
             guard error == nil else {
                 // some internal error handling
                 debugPrint("Warning: network error \(error!.localizedDescription)")
                 return
             }
             guard let pageInfo = pageInfo,
-                let manufacurers = manufacurers else {
+                let newManufacturers = newManufacturers else {
                     debugPrint("Warning: payload mised.")
                     return
             }
             
-            self?.manufacurersPageInfo = pageInfo
-            self?.manufacurers.append(contentsOf: manufacurers)
+            self?.manufacturersPageInfo = pageInfo
+            var updatedManufacturers = manufacturers
+            updatedManufacturers.append(contentsOf: newManufacturers)
+            self?.manufacturers = updatedManufacturers
             
             let isLastPage = pageToFetch == (pageInfo.totalPageCount - 1)
-            if let _ = self {
-                completion(self!.manufacurers, isLastPage)
-            }
+            completion(updatedManufacturers, isLastPage)
         }
     }
     

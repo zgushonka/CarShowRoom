@@ -11,13 +11,13 @@ import UIKit
 
 
 protocol DataFetcher {
-    func fetchManufacurers(page: Int, pageSize: Int, completion: @escaping (PageInfo?, [Manufacturer]?, Error?)->() )
+    func fetchManufacturers(page: Int, pageSize: Int, completion: @escaping (PageInfo?, [Manufacturer]?, Error?)->() )
     func fetchCars(manufacturerId: Int, page: Int, pageSize: Int, completion: @escaping (PageInfo?, [Car]?, Error?)->() )
 }
 
 
 protocol AppDataSourceProtocol {
-    func updateManufacurers(completion: @escaping ([Manufacturer], _ isLastUpdate: Bool)->() )
+    func updateManufacturers(completion: @escaping ([Manufacturer], _ isLastUpdate: Bool)->() )
     func updateCars(manufacurer: Manufacturer, completion: @escaping (Manufacturer, _ isLastUpdate: Bool)->() )
 }
 

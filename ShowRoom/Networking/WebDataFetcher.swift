@@ -16,8 +16,8 @@ final class WebDataFetcher: DataFetcher {
     // let parameters: ParametersProtocol
     
     
-    func fetchManufacurers(page: Int, pageSize: Int, completion: @escaping (PageInfo?, [Manufacturer]?, Error?)->() ) {
-        debugPrint("Fetch manufacurers - page \(page)")
+    func fetchManufacturers(page: Int, pageSize: Int, completion: @escaping (PageInfo?, [Manufacturer]?, Error?)->() ) {
+        debugPrint("Fetch manufacturers - page \(page)")
         let url = Endpoints.Auto.manufacturer.url
         let parameters: Parameters = ManufacureURLParameters.make(page: page,
                                                                   pageSize: pageSize,

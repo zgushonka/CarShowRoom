@@ -10,7 +10,7 @@ import XCTest
 @testable import ShowRoom
 
 //  interface
-//    func updateManufacurers(completion: @escaping ([Manufacturer], _ isLastUpdate: Bool)->() )
+//    func updateManufacturers(completion: @escaping ([Manufacturer], _ isLastUpdate: Bool)->() )
 //    func updateCars(manufacurer: Manufacturer, completion: @escaping (Manufacturer, _ isLastUpdate: Bool)->() )
 
 
@@ -31,10 +31,10 @@ class AppDataSourceTests: XCTestCase {
         super.tearDown()
     }
     
-    func testFetchManufacurers() {
+    func testFetchManufacturers() {
         let expectation = XCTestExpectation(description: "fetch manufacturers")
         
-        dataSource.updateManufacurers() { manufacturers, _ in
+        dataSource.updateManufacturers() { manufacturers, _ in
             XCTAssertNotNil(manufacturers)
             XCTAssert(manufacturers.count == 2)
             expectation.fulfill()
@@ -54,17 +54,17 @@ class AppDataSourceTests: XCTestCase {
         self.wait(for: [expectation], timeout: TimeInterval(5))
     }
     
-    func testFetchManufacurersLastUpdateTrue() {
+    func testFetchManufacturersLastUpdateTrue() {
         let expectation = XCTestExpectation(description: "last page")
         
-        dataSource.updateManufacurers() { _, isLastUpdate in
+        dataSource.updateManufacturers() { _, isLastUpdate in
             XCTAssert(isLastUpdate)
             expectation.fulfill()
         }
         self.wait(for: [expectation], timeout: TimeInterval(5))
     }
     
-    func testFetchManufacurersLastUpdateFalse() {
+    func testFetchManufacturersLastUpdateFalse() {
         let expectation = XCTestExpectation(description: "is not last page")
         
         let manufacturer = Manufacturer(id: 42, name: "Infinite Improbability Drives Ltd.")
@@ -76,7 +76,7 @@ class AppDataSourceTests: XCTestCase {
     }
     
     class MockDataFetcher: DataFetcher {
-        func fetchManufacurers(page: Int, pageSize: Int, completion: @escaping (PageInfo?, [Manufacturer]?, Error?) -> ()) {
+        func fetchManufacturers(page: Int, pageSize: Int, completion: @escaping (PageInfo?, [Manufacturer]?, Error?) -> ()) {
             let pageInfo = PageInfo(page: page, pageSize: pageSize, totalPageCount: page + 1)
             let manufacturers = [Manufacturer(id: 15, name: "AutoZAZ"), Manufacturer(id: 42, name: "Infinite Improbability Drives Ltd.")]
             completion(pageInfo, manufacturers, nil)
