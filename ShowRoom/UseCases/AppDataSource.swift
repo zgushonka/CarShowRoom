@@ -46,8 +46,8 @@ final class AppDataSource: AppDataSourceProtocol {
         inManufacurersFetch = true
         
         let pagesFetched = fetchedPages(manufacurers.count, pageSize)
-        let nextPageIndex = pagesFetched
-        dataFetcher.fetchManufacurers(page: nextPageIndex, pageSize: pageSize) { (pageInfo, manufacurers, error) in
+        let pageToFetch = pagesFetched
+        dataFetcher.fetchManufacurers(page: pageToFetch, pageSize: pageSize) { (pageInfo, manufacurers, error) in
             self.inManufacurersFetch = false
             guard error == nil else {
                 // some internal error handling
@@ -63,8 +63,8 @@ final class AppDataSource: AppDataSourceProtocol {
             self.manufacurersPageInfo = pageInfo
             self.manufacurers.append(contentsOf: manufacurers)
             
-            let isAllDataFetched = !self.isMoreManufacurersAvaliable()
-            completion(self.manufacurers, isAllDataFetched)
+            let isLastPage = pageToFetch == (pageInfo.totalPageCount - 1)
+            completion(self.manufacurers, isLastPage)
         }
     }
     
@@ -91,8 +91,8 @@ final class AppDataSource: AppDataSourceProtocol {
         inCarsFetch = true
         
         let pagesFetched = fetchedPages(manufacurer.cars.count, pageSize)
-        let nextPageIndex = pagesFetched
-        dataFetcher.fetchCars(manufacturerId: manufacurer.id, page: nextPageIndex, pageSize: pageSize) { (pageInfo, cars, error) in
+        let pageToFetch = pagesFetched
+        dataFetcher.fetchCars(manufacturerId: manufacurer.id, page: pageToFetch, pageSize: pageSize) { (pageInfo, cars, error) in
             self.inCarsFetch = false
             guard error == nil else {
                 // some internal error handling
@@ -108,8 +108,8 @@ final class AppDataSource: AppDataSourceProtocol {
             self.carsPageInfo[manufacurer.id] = pageInfo
             manufacurer.addCars(cars)
             
-            let isAllDataFetched = !self.isMoreCarsAvaliable(for: manufacurer)
-            completion(manufacurer, isAllDataFetched)
+            let isLastPage = pageToFetch == (pageInfo.totalPageCount - 1)
+            completion(manufacurer, isLastPage)
         }
     }
     
