@@ -11,6 +11,11 @@ import Alamofire
 
 final class WebDataFetcher: DataFetcher {
     
+    // TODO
+    // let endpoints: EndpointsProtocol
+    // let parameters: ParametersProtocol
+    
+    
     func fetchManufacurers(page: Int, pageSize: Int, completion: @escaping (PageInfo?, [Manufacturer]?, Error?)->() ) {
         debugPrint("Fetch manufacurers - page \(page)")
         let url = Endpoints.Auto.manufacturer.url

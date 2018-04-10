@@ -12,7 +12,6 @@ class ManufacturersViewController: ItemsViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = viewModel.viewTitle
         cellAccessoryType = .disclosureIndicator
     }
     

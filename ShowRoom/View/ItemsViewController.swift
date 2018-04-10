@@ -26,6 +26,7 @@ class ItemsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        title = viewModel.viewTitle
         tableView.prefetchDataSource = self
     }
     

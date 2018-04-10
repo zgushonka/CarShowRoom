@@ -50,7 +50,27 @@ class AppDataSourceTests: XCTestCase {
             XCTAssertNotNil(manufacturer)
             XCTAssert(manufacturer.cars.count > 0)
             expectation.fulfill()
-
+        }
+        self.wait(for: [expectation], timeout: TimeInterval(5))
+    }
+    
+    func testFetchManufacurersLastUpdateTrue() {
+        let expectation = XCTestExpectation(description: "last page")
+        
+        dataSource.updateManufacurers() { _, isLastUpdate in
+            XCTAssert(isLastUpdate)
+            expectation.fulfill()
+        }
+        self.wait(for: [expectation], timeout: TimeInterval(5))
+    }
+    
+    func testFetchManufacurersLastUpdateFalse() {
+        let expectation = XCTestExpectation(description: "is not last page")
+        
+        let manufacturer = Manufacturer(id: 42, name: "Infinite Improbability Drives Ltd.")
+        dataSource.updateCars(manufacurer: manufacturer) { _, isLastUpdate in
+            XCTAssert(isLastUpdate == false)
+            expectation.fulfill()
         }
         self.wait(for: [expectation], timeout: TimeInterval(5))
     }
@@ -67,7 +87,7 @@ class AppDataSourceTests: XCTestCase {
                 completion(nil, nil, NetworkError.missedVitalResponseData)
                 return
             }
-            let pageInfo = PageInfo(page: page, pageSize: pageSize, totalPageCount: page + 1)
+            let pageInfo = PageInfo(page: page, pageSize: pageSize, totalPageCount: page + 10)
             let cars = [Car(name: "Heart of Gold")]
             completion(pageInfo, cars, nil)
         }
