@@ -9,11 +9,6 @@
 import UIKit
 
 class CarsViewController: ItemsViewController {
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        title = viewModel.viewTitle
-    }
     
     private func showDetailsAlert(forItem index: Int) {
         if let car = viewModel.item(forIndex: index) as? Car {

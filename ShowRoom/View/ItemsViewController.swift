@@ -27,6 +27,7 @@ class ItemsViewController: UITableViewController {
         super.viewDidLoad()
         
         tableView.prefetchDataSource = self
+        title = viewModel.viewTitle
     }
     
     private func updateUI(_ isLastUpdate: Bool) {
