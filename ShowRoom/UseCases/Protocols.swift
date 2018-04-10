@@ -12,7 +12,7 @@ import UIKit
 
 protocol DataFetcher {
     func fetchManufacurers(page: Int, pageSize: Int, completion: @escaping (PageInfo?, [Manufacturer]?, Error?)->() )
-    func fetchCars(manufacturer: Int, page: Int, pageSize: Int, completion: @escaping (PageInfo?, [Car]?, Error?)->() )
+    func fetchCars(manufacturerId: Int, page: Int, pageSize: Int, completion: @escaping (PageInfo?, [Car]?, Error?)->() )
 }
 
 

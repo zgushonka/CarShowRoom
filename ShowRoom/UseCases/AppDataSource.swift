@@ -92,7 +92,7 @@ final class AppDataSource: AppDataSourceProtocol {
         
         let pagesFetched = fetchedPages(manufacurer.cars.count, pageSize)
         let nextPageIndex = pagesFetched
-        dataFetcher.fetchCars(manufacturer: manufacurer.id, page: nextPageIndex, pageSize: pageSize) { (pageInfo, cars, error) in
+        dataFetcher.fetchCars(manufacturerId: manufacurer.id, page: nextPageIndex, pageSize: pageSize) { (pageInfo, cars, error) in
             self.inCarsFetch = false
             guard error == nil else {
                 // some internal error handling
