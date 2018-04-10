@@ -25,9 +25,7 @@ final class WebDataFetcher: DataFetcher {
         requests.append(request)
         
         request.responseJSON { [weak self] response in
-            if let requestIndex = self?.requests.index(of: request) {
-                self?.requests.remove(at: requestIndex)
-            }
+            _ = self?.deleteRequest(request: request)
             UIApplication.shared.isNetworkActivityIndicatorVisible = false
             
             if let error = response.error {
@@ -46,10 +44,16 @@ final class WebDataFetcher: DataFetcher {
     }
     
     private func cancelFetch(request: DataRequest) {
-        if let requestIndex = requests.index(of: request) {
-            let request = requests.remove(at: requestIndex)
+        if let request = deleteRequest(request: request) {
             request.cancel()
         }
+    }
+    
+    private func deleteRequest(request: DataRequest) -> DataRequest? {
+        if let requestIndex = requests.index(of: request) {
+            return requests.remove(at: requestIndex)
+        }
+        return nil
     }
     
     func page(forIndex index: Int, pageSize: Int) -> Int? {
@@ -115,7 +119,6 @@ extension WebDataFetcher {
 
 // fetch Cars
 extension WebDataFetcher {
-    
     private func makeRequestForFetchCars(manufacturerId: Int, page: Int, pageSize: Int) -> DataRequest {
         let url = Endpoints.Auto.cars.url
         let parameters: Parameters = CarsURLParameters.make(manufacturer: manufacturerId,
