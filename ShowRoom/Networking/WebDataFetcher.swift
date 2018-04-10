@@ -92,30 +92,45 @@ final class WebDataFetcher: DataFetcher {
         result.sort { $0.name < $1.name }
         return result
     }
-}
-
-
-// add Alamofire
-extension WebDataFetcher {
+    
+    
+//    add Alamofire
+    private var requests: [DataRequest] = []
     private func fetchData(_ url: URLConvertible,
                            parameters: Parameters? = nil,
                            completion: @escaping (FetchResult?, Error?)->() ) {
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
-        Alamofire.request(url, method: .get, parameters: parameters, encoding: URLEncoding.default, headers: nil)
-            .responseJSON { response in
-                UIApplication.shared.isNetworkActivityIndicatorVisible = false
-                if let error = response.error {
-                    completion(nil, error)
-                    return
-                }
-                
-                if let json = response.result.value as? [String:Any] {
-                    let result = FetchResult(JSON: json)
-                    completion(result, nil)
-                } else {
-                    debugPrint("Warning: wrong response.")
-                    debugPrint(response)
-                }
+        
+        let request = Alamofire.request(url, method: .get, parameters: parameters, encoding: URLEncoding.default, headers: nil)
+        guard !requests.contains(request) else {
+            return // skip request
         }
+        
+        request.responseJSON { [weak self] response in
+            if let requestIndex = self?.requests.index(of: request) {
+                self?.requests.remove(at: requestIndex)
+            }
+            UIApplication.shared.isNetworkActivityIndicatorVisible = false
+            
+            if let error = response.error {
+                completion(nil, error)
+                return
+            }
+            
+            if let json = response.result.value as? [String:Any] {
+                let result = FetchResult(JSON: json)
+                completion(result, nil)
+            } else {
+                debugPrint("Warning: wrong response.")
+                debugPrint(response)
+            }
+        }
+    }
+}
+
+
+extension DataRequest: Equatable {
+    public static func ==(lhs:DataRequest, rhs:DataRequest) -> Bool {
+        return lhs.request == rhs.request
     }
 }
