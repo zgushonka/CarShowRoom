@@ -26,8 +26,8 @@ class ItemsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.prefetchDataSource = self
         title = viewModel.viewTitle
+        tableView.prefetchDataSource = self
     }
     
     private func updateUI(_ isLastUpdate: Bool) {
@@ -59,7 +59,15 @@ class ItemsViewController: UITableViewController {
 extension ItemsViewController: UITableViewDataSourcePrefetching {
     func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
         if let latestIndexPath = indexPaths.sorted(by:<).last {
+            debugPrint("Prefetch at - \(latestIndexPath.row)")
             let _ = viewModel.itemTitle(forIndex: latestIndexPath.row)
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, cancelPrefetchingForRowsAt indexPaths: [IndexPath]) {
+        if let latestIndexPath = indexPaths.sorted(by:<).last {
+            debugPrint("Prefetch Cancel at - \(latestIndexPath.row)")
+            viewModel.cancelPrefetch(atIndex: latestIndexPath.row)
         }
     }
 }

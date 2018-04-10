@@ -45,15 +45,14 @@ final class ManufacturersViewModel: ItemsViewModelProtocol {
     }
     
     private func askForNextItems() {
-        dataSource.updateManufacurers() { [weak self] manufacturers, isLastUpdate in
+        dataSource.updateManufacturers() { [weak self] manufacturers, isLastUpdate in
             self?.manufacturers = manufacturers
             self?.onDataUpdate?(isLastUpdate)
         }
     }
     
-    func cellColor(forIndex index: Int) -> UIColor {
-        let cellColor = CellColor(index)
-        return cellColor.color
+    func cancelPrefetch(atIndex index: Int) {
+        dataSource.cancelManufacturersUpdate(atIndex: index)
     }
     
 }

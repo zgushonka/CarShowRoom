@@ -9,16 +9,75 @@
 import Foundation
 import Alamofire
 
-class WebDataFetcher: DataFetcher {
+final class WebDataFetcher: DataFetcher {
+    // TODO inject:
+    // let endpoints: EndpointsProtocol
+    // let parameters: ParametersProtocol
+
+    private var requests: [DataRequest] = []
+    private func fetchData(_ request: DataRequest, completion: @escaping (FetchResult?, Error?)->() ) {
+        guard addNewRequest(request) == true else { return } // skip request if exists
+        
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
+        request.responseJSON { [weak self] response in
+            self?.deleteRequest(request)
+            UIApplication.shared.isNetworkActivityIndicatorVisible = false
+            
+            if let error = response.error {
+                completion(nil, error)
+                return
+            }
+            
+            if let json = response.result.value as? [String:Any] {
+                let result = FetchResult(JSON: json)
+                completion(result, nil)
+            } else {
+                debugPrint("Warning: wrong response.")
+                debugPrint(response)
+            }
+        }
+    }
     
-    func fetchManufacurers(page: Int, pageSize: Int, completion: @escaping (PageInfo?, [Manufacturer]?, Error?)->() ) {
-        debugPrint("Fetch manufacurers - page \(page)")
+    /// Returns True if this is a new request. Returns False if this request already exists.
+    private func addNewRequest(_ request: DataRequest) -> Bool {
+        guard !requests.contains(request) else { return false }
+        requests.append(request)
+        return true
+    }
+    
+    private func cancelRequest(_ request: DataRequest) {
+        deleteRequest(request)?.cancel()
+    }
+    
+    @discardableResult private func deleteRequest(_ request: DataRequest) -> DataRequest? {
+        guard let requestIndex = requests.index(of: request) else { return nil }
+        return requests.remove(at: requestIndex)
+    }
+    
+    func page(forIndex index: Int, pageSize: Int) -> Int? {
+        guard index >= 0, pageSize > 0 else { return nil }
+        let page = Int( (Double(index) / Double(pageSize)).rounded(.down) )
+        return page
+    }
+}
+
+
+
+// fetch Manufacturers
+extension WebDataFetcher {
+    private func makeRequestForFetchManufacturers(page: Int, pageSize: Int) -> DataRequest {
         let url = Endpoints.Auto.manufacturer.url
         let parameters: Parameters = ManufacureURLParameters.make(page: page,
                                                                   pageSize: pageSize,
                                                                   key: Endpoints.Auto.key)
+        return Alamofire.request(url, method: .get, parameters: parameters, encoding: URLEncoding.default, headers: nil)
+    }
+    
+    func fetchManufacturers(page: Int, pageSize: Int, completion: @escaping (PageInfo?, [Manufacturer]?, Error?)->() ) {
+        debugPrint("Fetch manufacturers - page \(page)")
+        let request = makeRequestForFetchManufacturers(page: page, pageSize: pageSize)
         
-        fetchData(url, parameters: parameters, completion: { fetchResult, error in
+        fetchData(request) { fetchResult, error in
             // check response
             guard error == nil else {
                 completion(nil, nil, error)
@@ -34,9 +93,9 @@ class WebDataFetcher: DataFetcher {
             
             let manufacturers = self.parseManufacturers(dataDict)
             completion(pageInfo, manufacturers, nil)
-        })
+        }
     }
-    
+
     private func parseManufacturers(_ manufacturersDict: [String:String]) -> [Manufacturer] {
         var result = [Manufacturer]()
         for (id, name) in manufacturersDict {
@@ -51,15 +110,30 @@ class WebDataFetcher: DataFetcher {
         return result
     }
     
-    
-    func fetchCars(manufacturer: Int, page: Int, pageSize: Int, completion: @escaping (PageInfo?, [Car]?, Error?)->() ) {
-        debugPrint("Fetch cars for \(manufacturer) - page \(page)")
+    func cancelManufacturersFetch(onIndex index: Int, pageSize: Int) {
+        guard let page = page(forIndex: index, pageSize: pageSize) else { return }
+        let request = makeRequestForFetchManufacturers(page: page, pageSize: pageSize)
+        cancelRequest(request)
+    }
+}
+
+
+
+// fetch Cars
+extension WebDataFetcher {
+    private func makeRequestForFetchCars(manufacturerId: Int, page: Int, pageSize: Int) -> DataRequest {
         let url = Endpoints.Auto.cars.url
-        let parameters: Parameters = CarsURLParameters.make(manufacturer: manufacturer,
+        let parameters: Parameters = CarsURLParameters.make(manufacturer: manufacturerId,
                                                             page: page,
                                                             pageSize: pageSize,
                                                             key: Endpoints.Auto.key)
-        fetchData(url, parameters: parameters, completion: { fetchResult, error in
+        return Alamofire.request(url, method: .get, parameters: parameters, encoding: URLEncoding.default, headers: nil)
+    }
+    
+    func fetchCars(manufacturerId: Int, page: Int, pageSize: Int, completion: @escaping (PageInfo?, [Car]?, Error?)->() ) {
+        debugPrint("Fetch cars for \(manufacturerId) - page \(page)")
+        let request = makeRequestForFetchCars(manufacturerId: manufacturerId, page: page, pageSize: pageSize)
+        fetchData(request) { fetchResult, error in
             // check response
             guard error == nil else {
                 completion(nil, nil, error)
@@ -75,9 +149,9 @@ class WebDataFetcher: DataFetcher {
             
             let cars = self.parseCars(dataDict)
             completion(pageInfo, cars, nil)
-        })
+        }
     }
-
+    
     private func parseCars(_ carsDict: [String:String]) -> [Car] {
         var result = [Car]()
         for (_, name) in carsDict {
@@ -87,30 +161,17 @@ class WebDataFetcher: DataFetcher {
         result.sort { $0.name < $1.name }
         return result
     }
+    
+    func cancelCarsFetch(manufacturerId: Int, onIndex index: Int, pageSize: Int) {
+        guard let page = page(forIndex: index, pageSize: pageSize) else { return }
+        let request = makeRequestForFetchCars(manufacturerId: manufacturerId,page: page, pageSize: pageSize)
+        cancelRequest(request)
+    }
 }
 
 
-// add Alamofire
-extension WebDataFetcher {
-    private func fetchData(_ url: URLConvertible,
-                           parameters: Parameters? = nil,
-                           completion: @escaping (FetchResult?, Error?)->() ) {
-        UIApplication.shared.isNetworkActivityIndicatorVisible = true
-        Alamofire.request(url, method: .get, parameters: parameters, encoding: URLEncoding.default, headers: nil)
-            .responseJSON { response in
-                UIApplication.shared.isNetworkActivityIndicatorVisible = false
-                if let error = response.error {
-                    completion(nil, error)
-                    return
-                }
-                
-                if let json = response.result.value as? [String:Any] {
-                    let result = FetchResult(JSON: json)
-                    completion(result, nil)
-                } else {
-                    debugPrint("Warning: wrong response.")
-                    debugPrint(response)
-                }
-        }
+extension DataRequest: Equatable {
+    public static func == (lhs:DataRequest, rhs:DataRequest) -> Bool {
+        return lhs.request == rhs.request
     }
 }

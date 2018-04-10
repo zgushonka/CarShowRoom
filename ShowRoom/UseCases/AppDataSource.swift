@@ -10,62 +10,63 @@ import Foundation
 
 final class AppDataSource: AppDataSourceProtocol {
     
-    private var manufacurers: [Manufacturer]        // Page : Manufacturers
+    private var manufacturers: [Manufacturer]        // Page : Manufacturers
     
-    private var manufacurersPageInfo: PageInfo?
+    private var manufacturersPageInfo: PageInfo?
     private var carsPageInfo: [Int:PageInfo] = [:]
     
     private var dataFetcher: DataFetcher
     private let pageSize: Int
     
     init(dataFetcher: DataFetcher, pageSize: Int) {
+        assert(pageSize > 0)
         self.dataFetcher = dataFetcher
         self.pageSize = pageSize
-        manufacurers = []
+        manufacturers = []
     }
     
     // AppDataSourceProtocol methods
     // update Manufacturers
-    private func isMoreManufacurersAvaliable() -> Bool {
-        let result = isMorePagesAvaliable(itemsFetched: manufacurers.count,
+    private func isMoreManufacturersAvaliable() -> Bool {
+        let result = isMorePagesAvaliable(itemsFetched: manufacturers.count,
                                           itemsPerPage: pageSize,
-                                          totalPageCount: manufacurersPageInfo?.totalPageCount)
+                                          totalPageCount: manufacturersPageInfo?.totalPageCount)
         return result
     }
     
-    private var inManufacurersFetch = false
-    func updateManufacurers(completion: @escaping ([Manufacturer], _ isLastUpdate: Bool)->() ) {
-        let isAllDataFetched = !isMoreManufacurersAvaliable()
-        if isAllDataFetched {
-            completion(manufacurers, true)
+    func updateManufacturers(completion: @escaping ([Manufacturer], _ isLastUpdate: Bool)->() ) {
+        guard isMoreManufacturersAvaliable() else {
+            completion(manufacturers, true)
             return
         }
         
         // fetch next page
-        if inManufacurersFetch { return }
-        inManufacurersFetch = true
-        
-        let pagesFetched = fetchedPages(manufacurers.count, pageSize)
-        let nextPageIndex = pagesFetched
-        dataFetcher.fetchManufacurers(page: nextPageIndex, pageSize: pageSize) { (pageInfo, manufacurers, error) in
-            self.inManufacurersFetch = false
+        let pagesFetched = fetchedPages(manufacturers.count, pageSize)
+        let pageToFetch = pagesFetched
+        dataFetcher.fetchManufacturers(page: pageToFetch, pageSize: pageSize) { [manufacturers, weak self] (pageInfo, newManufacturers, error) in
             guard error == nil else {
                 // some internal error handling
                 debugPrint("Warning: network error \(error!.localizedDescription)")
                 return
             }
             guard let pageInfo = pageInfo,
-                let manufacurers = manufacurers else {
+                let newManufacturers = newManufacturers else {
                     debugPrint("Warning: payload mised.")
                     return
             }
             
-            self.manufacurersPageInfo = pageInfo
-            self.manufacurers.append(contentsOf: manufacurers)
+            self?.manufacturersPageInfo = pageInfo
+            var updatedManufacturers = manufacturers
+            updatedManufacturers.append(contentsOf: newManufacturers)
+            self?.manufacturers = updatedManufacturers
             
-            let isAllDataFetched = !self.isMoreManufacurersAvaliable()
-            completion(self.manufacurers, isAllDataFetched)
+            let isLastPage = pageToFetch == (pageInfo.totalPageCount - 1)
+            completion(updatedManufacturers, isLastPage)
         }
+    }
+    
+    func cancelManufacturersUpdate(atIndex index: Int) {
+        dataFetcher.cancelManufacturersFetch(onIndex: index, pageSize: pageSize)
     }
     
     
@@ -78,22 +79,16 @@ final class AppDataSource: AppDataSourceProtocol {
         return result
     }
     
-    private var inCarsFetch = false
     func updateCars(manufacurer: Manufacturer, completion: @escaping (Manufacturer, _ isLastUpdate: Bool)->() ) {
-        let isAllDataFetched = !isMoreCarsAvaliable(for: manufacurer)
-        if isAllDataFetched {
+        guard isMoreCarsAvaliable(for: manufacurer) else {
             completion(manufacurer, true)
             return
         }
         
         // fetch next page
-        if inCarsFetch { return }
-        inCarsFetch = true
-        
         let pagesFetched = fetchedPages(manufacurer.cars.count, pageSize)
-        let nextPageIndex = pagesFetched
-        dataFetcher.fetchCars(manufacturer: manufacurer.id, page: nextPageIndex, pageSize: pageSize) { (pageInfo, cars, error) in
-            self.inCarsFetch = false
+        let pageToFetch = pagesFetched
+        dataFetcher.fetchCars(manufacturerId: manufacurer.id, page: pageToFetch, pageSize: pageSize) { [weak self] (pageInfo, cars, error) in
             guard error == nil else {
                 // some internal error handling
                 debugPrint("Warning: network error \(error!.localizedDescription)")
@@ -105,12 +100,16 @@ final class AppDataSource: AppDataSourceProtocol {
                     return
             }
             
-            self.carsPageInfo[manufacurer.id] = pageInfo
+            self?.carsPageInfo[manufacurer.id] = pageInfo
             manufacurer.addCars(cars)
             
-            let isAllDataFetched = !self.isMoreCarsAvaliable(for: manufacurer)
-            completion(manufacurer, isAllDataFetched)
+            let isLastPage = pageToFetch == (pageInfo.totalPageCount - 1)
+            completion(manufacurer, isLastPage)
         }
+    }
+    
+    func cancelCarsUpdate(manufacturer: Manufacturer, atIndex index: Int) {
+        dataFetcher.cancelCarsFetch(manufacturerId: manufacturer.id, onIndex: index, pageSize: pageSize)
     }
     
 }

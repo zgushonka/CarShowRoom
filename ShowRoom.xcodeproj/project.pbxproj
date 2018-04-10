@@ -17,6 +17,8 @@
 		E3BF895020790AAA00363003 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E3BF894E20790AAA00363003 /* Main.storyboard */; };
 		E3BF895220790AAC00363003 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E3BF895120790AAC00363003 /* Assets.xcassets */; };
 		E3BF895520790AAC00363003 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E3BF895320790AAC00363003 /* LaunchScreen.storyboard */; };
+		E3C297E8207CBCB700FC54CD /* AppDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C297E7207CBCB700FC54CD /* AppDataSourceTests.swift */; };
+		E3C297EA207CEF7E00FC54CD /* WebDataFetcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C297E9207CEF7E00FC54CD /* WebDataFetcherTests.swift */; };
 		E3C5FD85207955290020BF0B /* Manufacturer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C5FD84207955290020BF0B /* Manufacturer.swift */; };
 		E3C5FD872079559C0020BF0B /* Car.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C5FD862079559C0020BF0B /* Car.swift */; };
 		E3C5FD89207956A30020BF0B /* ManufacturerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C5FD88207956A30020BF0B /* ManufacturerTests.swift */; };
@@ -65,6 +67,8 @@
 		E3BF895620790AAC00363003 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E3BF895B20790AAC00363003 /* ShowRoomTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ShowRoomTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3BF896120790AAC00363003 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E3C297E7207CBCB700FC54CD /* AppDataSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDataSourceTests.swift; path = ShowRoomTests/AppDataSourceTests.swift; sourceTree = SOURCE_ROOT; };
+		E3C297E9207CEF7E00FC54CD /* WebDataFetcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebDataFetcherTests.swift; sourceTree = "<group>"; };
 		E3C5FD84207955290020BF0B /* Manufacturer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Manufacturer.swift; sourceTree = "<group>"; };
 		E3C5FD862079559C0020BF0B /* Car.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Car.swift; sourceTree = "<group>"; };
 		E3C5FD88207956A30020BF0B /* ManufacturerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManufacturerTests.swift; sourceTree = "<group>"; };
@@ -148,6 +152,7 @@
 				E3324CB1207AAD93008B85CF /* Manufacturers */,
 				E3324CBA207AD299008B85CF /* Cars */,
 				E3F49756207A7AB800B8CE05 /* AppDataSource.swift */,
+				E3F05E10207A5BA8008DFA7E /* PageInfo.swift */,
 				E3F4974D207A6EF000B8CE05 /* Protocols.swift */,
 				E3F49754207A77EF00B8CE05 /* Constants.swift */,
 			);
@@ -195,6 +200,8 @@
 			children = (
 				E3C5FD88207956A30020BF0B /* ManufacturerTests.swift */,
 				E3F05DFF207958EB008DFA7E /* CarTests.swift */,
+				E3C297E7207CBCB700FC54CD /* AppDataSourceTests.swift */,
+				E3C297E9207CEF7E00FC54CD /* WebDataFetcherTests.swift */,
 				E3F49758207A821600B8CE05 /* CellColorTests.swift */,
 				E3BF896120790AAC00363003 /* Info.plist */,
 			);
@@ -234,7 +241,6 @@
 		E3F4975A207AA45A00B8CE05 /* Entity */ = {
 			isa = PBXGroup;
 			children = (
-				E3F05E10207A5BA8008DFA7E /* PageInfo.swift */,
 				E3C5FD84207955290020BF0B /* Manufacturer.swift */,
 				E3C5FD862079559C0020BF0B /* Car.swift */,
 			);
@@ -434,7 +440,9 @@
 			files = (
 				E3F05E00207958EB008DFA7E /* CarTests.swift in Sources */,
 				E3C5FD89207956A30020BF0B /* ManufacturerTests.swift in Sources */,
+				E3C297E8207CBCB700FC54CD /* AppDataSourceTests.swift in Sources */,
 				E3F49759207A821600B8CE05 /* CellColorTests.swift in Sources */,
+				E3C297EA207CEF7E00FC54CD /* WebDataFetcherTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -587,6 +595,7 @@
 			baseConfigurationReference = 829511B16974E72A5F1B7584 /* Pods-ShowRoom.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = P6B68ZWQ8T;
 				INFOPLIST_FILE = ShowRoom/Info.plist;
@@ -597,6 +606,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.farelapps.ShowRoom;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -607,6 +617,7 @@
 			baseConfigurationReference = B9107F0373CD813334D41B68 /* Pods-ShowRoom.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = P6B68ZWQ8T;
 				INFOPLIST_FILE = ShowRoom/Info.plist;
@@ -617,6 +628,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.farelapps.ShowRoom;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -629,7 +641,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 32DX5CVNJ6;
+				DEVELOPMENT_TEAM = P6B68ZWQ8T;
 				INFOPLIST_FILE = ShowRoomTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -651,7 +663,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 32DX5CVNJ6;
+				DEVELOPMENT_TEAM = P6B68ZWQ8T;
 				INFOPLIST_FILE = ShowRoomTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
