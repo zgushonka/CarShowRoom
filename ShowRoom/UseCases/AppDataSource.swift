@@ -35,8 +35,7 @@ final class AppDataSource: AppDataSourceProtocol {
     }
     
     func updateManufacturers(completion: @escaping ([Manufacturer], _ isLastUpdate: Bool)->() ) {
-        let isAllDataFetched = !isMoreManufacturersAvaliable()
-        if isAllDataFetched {
+        guard isMoreManufacturersAvaliable() else {
             completion(manufacturers, true)
             return
         }
@@ -81,8 +80,7 @@ final class AppDataSource: AppDataSourceProtocol {
     }
     
     func updateCars(manufacurer: Manufacturer, completion: @escaping (Manufacturer, _ isLastUpdate: Bool)->() ) {
-        let isAllDataFetched = !isMoreCarsAvaliable(for: manufacurer)
-        if isAllDataFetched {
+        guard isMoreCarsAvaliable(for: manufacurer) else {
             completion(manufacurer, true)
             return
         }

@@ -14,7 +14,6 @@ final class WebDataFetcher: DataFetcher {
     // let endpoints: EndpointsProtocol
     // let parameters: ParametersProtocol
 
-//    add Alamofire
     private var requests: [DataRequest] = []
     private func fetchData(_ request: DataRequest, completion: @escaping (FetchResult?, Error?)->() ) {
         guard addNewRequest(request) == true else { return } // skip request if exists
@@ -39,7 +38,7 @@ final class WebDataFetcher: DataFetcher {
         }
     }
     
-    /// returns True if this is new request. Returns False if this request already exists.
+    /// Returns True if this is a new request. Returns False if this request already exists.
     private func addNewRequest(_ request: DataRequest) -> Bool {
         guard !requests.contains(request) else { return false }
         requests.append(request)
@@ -61,6 +60,8 @@ final class WebDataFetcher: DataFetcher {
         return page
     }
 }
+
+
 
 // fetch Manufacturers
 extension WebDataFetcher {
@@ -116,6 +117,8 @@ extension WebDataFetcher {
     }
 }
 
+
+
 // fetch Cars
 extension WebDataFetcher {
     private func makeRequestForFetchCars(manufacturerId: Int, page: Int, pageSize: Int) -> DataRequest {
@@ -127,10 +130,9 @@ extension WebDataFetcher {
         return Alamofire.request(url, method: .get, parameters: parameters, encoding: URLEncoding.default, headers: nil)
     }
     
-    
     func fetchCars(manufacturerId: Int, page: Int, pageSize: Int, completion: @escaping (PageInfo?, [Car]?, Error?)->() ) {
         debugPrint("Fetch cars for \(manufacturerId) - page \(page)")
-        let request = makeRequestForFetchManufacturers(page: page, pageSize: pageSize)
+        let request = makeRequestForFetchCars(manufacturerId: manufacturerId, page: page, pageSize: pageSize)
         fetchData(request) { fetchResult, error in
             // check response
             guard error == nil else {
@@ -169,7 +171,7 @@ extension WebDataFetcher {
 
 
 extension DataRequest: Equatable {
-    public static func ==(lhs:DataRequest, rhs:DataRequest) -> Bool {
+    public static func == (lhs:DataRequest, rhs:DataRequest) -> Bool {
         return lhs.request == rhs.request
     }
 }
