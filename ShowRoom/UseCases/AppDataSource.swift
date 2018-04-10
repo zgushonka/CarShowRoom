@@ -33,6 +33,7 @@ final class AppDataSource: AppDataSourceProtocol {
         return result
     }
     
+    // TODO get rid of fetch locks
     private var inManufacurersFetch = false
     func updateManufacurers(completion: @escaping ([Manufacturer], _ isLastUpdate: Bool)->() ) {
         let isAllDataFetched = !isMoreManufacurersAvaliable()
@@ -78,6 +79,7 @@ final class AppDataSource: AppDataSourceProtocol {
         return result
     }
     
+    // TODO get rid of fetch locks
     private var inCarsFetch = false
     func updateCars(manufacurer: Manufacturer, completion: @escaping (Manufacturer, _ isLastUpdate: Bool)->() ) {
         let isAllDataFetched = !isMoreCarsAvaliable(for: manufacurer)
