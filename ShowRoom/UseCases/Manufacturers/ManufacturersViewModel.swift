@@ -52,7 +52,7 @@ final class ManufacturersViewModel: ItemsViewModelProtocol {
     }
     
     func cancelPrefetch(atIndex index: Int) {
-        dataSource.cancelManufacturersPrefetch(atIndex: index)
+        dataSource.cancelManufacturersUpdate(atIndex: index)
     }
     
 }

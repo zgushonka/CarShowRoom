@@ -53,7 +53,7 @@ final class CarsViewModel: ItemsViewModelProtocol {
     }
     
     func cancelPrefetch(atIndex index: Int) {
-        dataSource.cancelCarsPrefetch(manufacturer: manufacturer, atIndex: index)
+        dataSource.cancelCarsUpdate(manufacturer: manufacturer, atIndex: index)
     }
     
 }

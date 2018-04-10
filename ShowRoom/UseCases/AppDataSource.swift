@@ -66,7 +66,7 @@ final class AppDataSource: AppDataSourceProtocol {
         }
     }
     
-    func cancelManufacturersPrefetch(atIndex index: Int) {
+    func cancelManufacturersUpdate(atIndex index: Int) {
         dataFetcher.cancelManufacturersFetch(onIndex: index, pageSize: pageSize)
     }
     
@@ -110,7 +110,7 @@ final class AppDataSource: AppDataSourceProtocol {
         }
     }
     
-    func cancelCarsPrefetch(manufacturer: Manufacturer, atIndex index: Int) {
+    func cancelCarsUpdate(manufacturer: Manufacturer, atIndex index: Int) {
         dataFetcher.cancelCarsFetch(manufacturerId: manufacturer.id, onIndex: index, pageSize: pageSize)
     }
     

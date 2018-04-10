@@ -30,17 +30,17 @@ extension DataFetcher {
 
 protocol AppDataSourceProtocol {
     func updateManufacturers(completion: @escaping ([Manufacturer], _ isLastUpdate: Bool)->() )
-    func cancelManufacturersPrefetch(atIndex index: Int)
+    func cancelManufacturersUpdate(atIndex index: Int)
     
     func updateCars(manufacurer: Manufacturer, completion: @escaping (Manufacturer, _ isLastUpdate: Bool)->() )
-    func cancelCarsPrefetch(manufacturer: Manufacturer, atIndex index: Int)
+    func cancelCarsUpdate(manufacturer: Manufacturer, atIndex index: Int)
 }
 
 extension AppDataSourceProtocol {
-    func cancelManufacturersPrefetch(atIndex index: Int) {
+    func cancelManufacturersUpdate(atIndex index: Int) {
         debugPrint("override me - cancelManufacturersPrefetch")
     }
-    func cancelCarsPrefetch(manufacturer: Manufacturer, atIndex: Int) {
+    func cancelCarsUpdate(manufacturer: Manufacturer, atIndex: Int) {
         debugPrint("override me - cancelCarsPrefetch")
     }
 }
