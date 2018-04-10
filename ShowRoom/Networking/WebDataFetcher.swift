@@ -21,7 +21,7 @@ final class WebDataFetcher: DataFetcher {
         
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
         request.responseJSON { [weak self] response in
-            _ = self?.deleteRequest(request)
+            self?.deleteRequest(request)
             UIApplication.shared.isNetworkActivityIndicatorVisible = false
             
             if let error = response.error {
@@ -50,11 +50,9 @@ final class WebDataFetcher: DataFetcher {
         deleteRequest(request)?.cancel()
     }
     
-    private func deleteRequest(_ request: DataRequest) -> DataRequest? {
-        if let requestIndex = requests.index(of: request) {
-            return requests.remove(at: requestIndex)
-        }
-        return nil
+    @discardableResult private func deleteRequest(_ request: DataRequest) -> DataRequest? {
+        guard let requestIndex = requests.index(of: request) else { return nil }
+        return requests.remove(at: requestIndex)
     }
     
     func page(forIndex index: Int, pageSize: Int) -> Int? {
