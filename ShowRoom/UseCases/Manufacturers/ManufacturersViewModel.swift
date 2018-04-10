@@ -51,9 +51,8 @@ final class ManufacturersViewModel: ItemsViewModelProtocol {
         }
     }
     
-    func cellColor(forIndex index: Int) -> UIColor {
-        let cellColor = CellColor(index)
-        return cellColor.color
+    func cancelPrefetch(atIndex index: Int) {
+        dataSource.cancelManufacturersPrefetch(atIndex: index)
     }
     
 }

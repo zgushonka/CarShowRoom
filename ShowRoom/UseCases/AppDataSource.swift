@@ -19,6 +19,7 @@ final class AppDataSource: AppDataSourceProtocol {
     private let pageSize: Int
     
     init(dataFetcher: DataFetcher, pageSize: Int) {
+        assert(pageSize > 0)
         self.dataFetcher = dataFetcher
         self.pageSize = pageSize
         manufacturers = []
@@ -65,6 +66,10 @@ final class AppDataSource: AppDataSourceProtocol {
         }
     }
     
+    func cancelManufacturersPrefetch(atIndex index: Int) {
+        dataFetcher.cancelManufacturersFetch(onIndex: index, pageSize: pageSize)
+    }
+    
     
     // Update Cars
     private func isMoreCarsAvaliable(for manufacturer: Manufacturer) -> Bool {
@@ -103,6 +108,10 @@ final class AppDataSource: AppDataSourceProtocol {
             let isLastPage = pageToFetch == (pageInfo.totalPageCount - 1)
             completion(manufacurer, isLastPage)
         }
+    }
+    
+    func cancelCarsPrefetch(manufacturer: Manufacturer, atIndex index: Int) {
+        dataFetcher.cancelCarsFetch(manufacturerId: manufacturer.id, onIndex: index, pageSize: pageSize)
     }
     
 }
