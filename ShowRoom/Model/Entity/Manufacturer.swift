@@ -19,6 +19,7 @@ final class Manufacturer {
         self.name = name
     }
     
+    /// Creates an instance if String "id" can be represented as Int.
     convenience init?(id: String, name: String) {
         guard let intId = Int(id) else { return nil }
         self.init(id: intId, name: name)
