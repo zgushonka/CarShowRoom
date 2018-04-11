@@ -96,19 +96,10 @@ extension WebDataFetcher {
         }
     }
 
-    // TODO: map()
-    private func parseManufacturers(_ manufacturersDict: [String:String]) -> [Manufacturer] {
-        var result = [Manufacturer]()
-        for (id, name) in manufacturersDict {
-            if let intId = Int(id) {
-                let manufacturer = Manufacturer(id: intId, name: name)
-                result.append(manufacturer)
-            } else {
-                debugPrint("Warning: can't read manufacturer ID.")
-            }
-        }
-        result.sort { $0.name < $1.name }
-        return result
+    func parseManufacturers(_ dict: [String:String]) -> [Manufacturer] {
+        let resultOpt = dict.map { Manufacturer(id: $0.key, name: $0.value) }
+        let result = resultOpt.filter { $0 != nil } as! [Manufacturer]
+        return result.sorted { $0.name < $1.name }
     }
     
     func cancelManufacturersFetch(onIndex index: Int, pageSize: Int) {
@@ -153,14 +144,9 @@ extension WebDataFetcher {
         }
     }
     
-    private func parseCars(_ carsDict: [String:String]) -> [Car] {
-        var result = [Car]()
-        for (_, name) in carsDict {
-            let car = Car(name: name)
-            result.append(car)
-        }
-        result.sort { $0.name < $1.name }
-        return result
+    private func parseCars(_ dict: [String:String]) -> [Car] {
+        let result = dict.map { Car(name: $0.value) }
+        return result.sorted { $0.name < $1.name }
     }
     
     func cancelCarsFetch(manufacturerId: Int, onIndex index: Int, pageSize: Int) {

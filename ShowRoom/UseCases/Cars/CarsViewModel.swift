@@ -37,7 +37,7 @@ final class CarsViewModel: ItemsViewModelProtocol {
     
     func itemTitle(forIndex index: Int) -> String? {
         if manufacturer.cars.count <= index {
-            // ask dataProvider for next items
+            // ask dataSource for next items
             askForNextItems()
             return nil
         }

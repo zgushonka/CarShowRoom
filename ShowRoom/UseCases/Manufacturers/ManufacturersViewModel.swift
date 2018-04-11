@@ -36,7 +36,7 @@ final class ManufacturersViewModel: ItemsViewModelProtocol {
     
     func itemTitle(forIndex index: Int) -> String? {
         if manufacturers.count <= index {
-            // ask dataProvider for next items
+            // ask dataSource for next items
             askForNextItems()
             return nil
         }

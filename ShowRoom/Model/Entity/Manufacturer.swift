@@ -19,7 +19,13 @@ final class Manufacturer {
         self.name = name
     }
     
+    convenience init?(id: String, name: String) {
+        guard let intId = Int(id) else { return nil }
+        self.init(id: intId, name: name)
+    }
+    
     func addCars(_ newCars: [Car]) {
         cars.append(contentsOf: newCars)
     }
 }
+

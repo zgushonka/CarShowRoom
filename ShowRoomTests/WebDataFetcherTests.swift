@@ -25,6 +25,8 @@ class WebDataFetcherTests: XCTestCase {
         super.tearDown()
     }
     
+    // TODO write normal protocol based tests
+    
     func testPageIndex0() {
         let index = 0
         let actualPage = dataFetcher.page(forIndex: index, pageSize: pageSize)
@@ -45,10 +47,30 @@ class WebDataFetcherTests: XCTestCase {
         let expectedPage = 0
         XCTAssertEqual(actualPage, expectedPage)
     }
+    
     func testPageIndexNextTimes2() {
         let index = pageSize * 2
         let actualPage = dataFetcher.page(forIndex: index, pageSize: pageSize)
         let expectedPage = 2
         XCTAssertEqual(actualPage, expectedPage)
     }
+    
+    func testParsManufacturersHappy() {
+        let dict = ["42": "name1",
+                    "84": "name2"]
+        
+        let actual = dataFetcher.parseManufacturers(dict)
+        XCTAssertNotNil(actual)
+        XCTAssert(actual.count == 2)
+    }
+    
+    func testParsManufacturersUnhappy() {
+        let dict = ["forty two": "name1",
+                    "84": "name2"]
+        
+        let actual = dataFetcher.parseManufacturers(dict)
+        XCTAssertNotNil(actual)
+        XCTAssert(actual.count == 1)
+    }
+    
 }
