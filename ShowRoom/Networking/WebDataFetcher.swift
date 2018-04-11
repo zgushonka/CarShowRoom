@@ -67,9 +67,9 @@ final class WebDataFetcher: DataFetcher {
 extension WebDataFetcher {
     private func makeRequestForFetchManufacturers(page: Int, pageSize: Int) -> DataRequest {
         let url = Endpoints.Auto.manufacturer.url
-        let parameters: Parameters = ManufacureURLParameters.make(page: page,
-                                                                  pageSize: pageSize,
-                                                                  key: Endpoints.Auto.key)
+        let parameters: Parameters = WebParameter.make(page: page,
+                                                       pageSize: pageSize,
+                                                       key: Endpoints.Auto.key)
         return Alamofire.request(url, method: .get, parameters: parameters, encoding: URLEncoding.default, headers: nil)
     }
     
@@ -96,6 +96,7 @@ extension WebDataFetcher {
         }
     }
 
+    // TODO: map()
     private func parseManufacturers(_ manufacturersDict: [String:String]) -> [Manufacturer] {
         var result = [Manufacturer]()
         for (id, name) in manufacturersDict {
@@ -123,10 +124,10 @@ extension WebDataFetcher {
 extension WebDataFetcher {
     private func makeRequestForFetchCars(manufacturerId: Int, page: Int, pageSize: Int) -> DataRequest {
         let url = Endpoints.Auto.cars.url
-        let parameters: Parameters = CarsURLParameters.make(manufacturer: manufacturerId,
-                                                            page: page,
-                                                            pageSize: pageSize,
-                                                            key: Endpoints.Auto.key)
+        let parameters: Parameters = WebParameter.make(manufacturer: manufacturerId,
+                                                       page: page,
+                                                       pageSize: pageSize,
+                                                       key: Endpoints.Auto.key)
         return Alamofire.request(url, method: .get, parameters: parameters, encoding: URLEncoding.default, headers: nil)
     }
     

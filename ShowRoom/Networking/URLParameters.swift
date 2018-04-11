@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct ManufacureURLParameters {
+struct WebParameter {
     static func make(page: Int, pageSize: Int, key: String?) -> [String:Any] {
         var parameters: [String:Any] = [Parameter.page.rawValue: page,
                                         Parameter.pageSize.rawValue: pageSize]
@@ -17,9 +17,7 @@ struct ManufacureURLParameters {
         }
         return parameters
     }
-}
 
-struct CarsURLParameters {
     static func make(manufacturer: Int, page: Int, pageSize: Int, key: String?) -> [String:Any] {
         var parameters: [String:Any] = [Parameter.manufacturer.rawValue: manufacturer,
                                         Parameter.page.rawValue: page,
